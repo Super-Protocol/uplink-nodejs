@@ -5,6 +5,12 @@
  */
 #include "promises_complete.h"
 #include <string>
+#include <map>
+#include <mutex>
+
+std::map <size_t, UplinkDownloadResult> downloadResultBinding;
+std::mutex downloadResultBindingMutex;
+
 /*!
  \fn void openProjectPromiseComplete(napi_env env, napi_status status, void* data) 
  \brief openProjectPromiseComplete creates the handle for open_project
@@ -144,6 +150,12 @@ napi_status status, void* data) {
     napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
+  std::lock_guard<std::mutex> lock(downloadResultBindingMutex);
+  auto find =  downloadResultBinding.find(obj->download_result._handle);
+  if (find != downloadResultBinding.end()) {
+    uplink_free_download_result(find->second);
+    downloadResultBinding.erase(find);
+  }
   free(obj);
 }
 /*!
@@ -185,6 +197,7 @@ napi_status status, void* data) {
     napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
+  uplink_free_read_result(read_result);
   free(obj);
 }
 /*!
@@ -214,6 +227,8 @@ napi_status status, void* data) {
     napi_value downloadResultNAPI = createResult(env, "download", handlevalue);
     //
     status = napi_resolve_deferred(env, obj->deferred, downloadResultNAPI);
+    std::lock_guard<std::mutex> lock(downloadResultBindingMutex);
+    downloadResultBinding[download._handle] = download_result;
   }
   if (status != napi_ok) {
     napi_throw_error(env, NULL, "Failed to return promise");
