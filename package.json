@@ -1,6 +1,6 @@
 {
-  "name": "uplink-nodejs",
-  "version": "1.2.6",
+  "name": "@super-protocol/uplink-nodejs",
+  "version": "1.2.7",
   "description": "Storj-NodeJS bindings package",
   "main": "dist/uplink.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/storj-thirdparty/uplink-nodejs.git"
+    "url": "https://github.com/Super-Protocol/uplink-nodejs-sp.git"
   },
   "keywords": [
     "bindings",
@@ -23,9 +23,9 @@
   "author": "Utropicmedia",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/storj-thirdparty/uplink-nodejs/issues"
+    "url": "https://github.com/Super-Protocol/uplink-nodejs-sp.git/issues"
   },
-  "homepage": "https://github.com/storj-thirdparty/uplink-nodejs#readme",
+  "homepage": "https://github.com/Super-Protocol/uplink-nodejs-sp.git#readme",
   "devDependencies": {
     "@tsconfig/node12": "^1.0.7",
     "@types/mocha": "^8.2.0",
@@ -41,5 +41,8 @@
     "@types/node": "^14.14.10",
     "bindings": "^1.5.0",
     "node-gyp": "^7.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }
