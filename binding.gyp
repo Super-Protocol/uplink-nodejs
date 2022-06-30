@@ -5,7 +5,7 @@
         {
           "target_name": "uplink",
           "include_dirs": ["./functions"],
-          "sources":["./libUplink.cc", "./functions/promises_execute.cc", "./functions/promises_complete.cc", "./functions/project_operations.cc", "./functions/download_operations.cc", "./functions/upload_operations.cc", "./functions/access_operations.cc", "./functions/bucket_operations.cc", "./functions/object_operations.cc" ],
+          "sources":["./libUplink.cc", "./functions/promises_execute.cc", "./functions/promises_complete.cc", "./functions/project_operations.cc", "./functions/download_operations.cc", "./functions/upload_operations.cc", "./functions/access_operations.cc", "./functions/bucket_operations.cc", "./functions/object_operations.cc", "./functions/release_objects_helpers.cc"],
           "libraries":["-L/<(module_root_dir)", "-luplinkcv1.2.4"],
           "ldflags": ["-Wl,-rpath,'$$ORIGIN/../..'"],
           "cflags_cc": ["-fexceptions","-fPIC","-Wno-unknown-pragmas"]
@@ -22,7 +22,7 @@
             "destination":"<(module_root_dir)/build/Release",
             "files":["<(module_root_dir)/libuplinkcversion.h","<(module_root_dir)/libuplinkcv1.2.4.dll","<(module_root_dir)/libuplinkcv1.2.4.h","<(module_root_dir)/uplink_definitions.h","<(module_root_dir)/uplink_combat.h"]
           }],
-          "ldflags":["-Wl,-rpath","build/Release"],  
+          "ldflags":["-Wl,-rpath","build/Release"],
         },
       ]
     }],

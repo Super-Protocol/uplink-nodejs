@@ -1,14 +1,15 @@
 // Copyright 2020 Storj Storj
 /** @mainpage Node-js bindings
  *  It uses napi for creating node module
- * 
+ *
  */
 #include "download_operations.h"
+#include "release_objects_helpers.h"
 #include <string>
 /*!
  \fn napi_value download_infoc(napi_env env, napi_callback_info info)
  \brief download_infoc function is called from the javascript file
- download_info returns information about the downloaded object . 
+ download_info returns information about the downloaded object .
  */
 napi_value download_infoc(napi_env env, napi_callback_info info) {
   napi_status status;
@@ -54,23 +55,19 @@ napi_value download_infoc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  bool propertyexists = false;
-  napi_value ObjectkeyNAPI;
-  string handle = "_handle";
-  status = napi_create_string_utf8(env,
-    const_cast<char* > (handle.c_str()), NAPI_AUTO_LENGTH , &ObjectkeyNAPI);
-  assert(status == napi_ok);
-  //
-  status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
-  assert(status == napi_ok);
-  if (!propertyexists) {
+  if (!DowloadObjectReleaseHelper::IsDowloadObjectReleaseHelper(env, args[0])) {
       free(obj);
-    napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
+    napi_throw_type_error(env, nullptr,
+      "\nInvalid Object \n");
     return NULL;
   }
 
   UplinkDownload download_result;
-  download_result._handle = getHandleValue(env, args[0]);
+  DowloadObjectReleaseHelper* myobj;
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&myobj));
+  assert(status == napi_ok);
+  download_result._handle = myobj->GetDownloadHandle();
+
   obj->download_result = download_result;
   napi_value resource_name;
   napi_create_string_utf8(env, "downloadInfo",
@@ -84,7 +81,7 @@ napi_value download_infoc(napi_env env, napi_callback_info info) {
  \fn napi_value close_downloadc(napi_env env, napi_callback_info info)
  \brief close_downloadc function is called from the javascript file
          close_downloadc closes the download .
-     
+
  */
 //
 napi_value close_downloadc(napi_env env, napi_callback_info info) {
@@ -127,25 +124,18 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  bool propertyexists = false;
-  napi_value ObjectkeyNAPI;
-  string handle = "_handle";
-  status = napi_create_string_utf8(env,
-    const_cast<char* > (handle.c_str()), NAPI_AUTO_LENGTH , &ObjectkeyNAPI);
-  assert(status == napi_ok);
-  //
-  status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
-  assert(status == napi_ok);
-  if (!propertyexists) {
+  if (!DowloadObjectReleaseHelper::IsDowloadObjectReleaseHelper(env, args[0])) {
       free(obj);
     napi_throw_type_error(env, nullptr,
       "\nInvalid Object \n");
     return NULL;
   }
 
-  UplinkDownload download_result;
-  download_result._handle = getHandleValue(env, args[0]);
-  obj->download_result = download_result;
+  DowloadObjectReleaseHelper* downloadReleaseHelper;
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&downloadReleaseHelper));
+  assert(status == napi_ok);
+  obj->dowloadObjectReleaseHelper = downloadReleaseHelper;
+
   napi_value resource_name;
   napi_create_string_utf8(env, "downloadClose",
   NAPI_AUTO_LENGTH, &resource_name);
@@ -154,11 +144,12 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
   napi_queue_async_work(env, obj->work);
   return promise;
 }
+
 /*!
  \fn napi_value download_readc(napi_env env, napi_callback_info info)
  \brief download_readc function is called from the javascript file
   download_readc reads the download .
-  
+
  */
 //
 napi_value download_readc(napi_env env, napi_callback_info info) {
@@ -223,17 +214,7 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  bool propertyexists = false;
-  napi_value ObjectkeyNAPI;
-  string handle = "_handle";
-  status = napi_create_string_utf8(env,
-    const_cast<char* > (handle.c_str()), NAPI_AUTO_LENGTH , &ObjectkeyNAPI);
-  assert(status == napi_ok);
-  //
-  status = napi_has_property(env, args[0],
-    ObjectkeyNAPI, &propertyexists);
-  assert(status == napi_ok);
-  if (!propertyexists) {
+  if (!DowloadObjectReleaseHelper::IsDowloadObjectReleaseHelper(env, args[0])) {
       free(obj);
     napi_throw_type_error(env, nullptr,
       "\nInvalid Object \n");
@@ -241,7 +222,10 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   }
 
   UplinkDownload download_resulterRef;
-  download_resulterRef._handle = getHandleValue(env, args[0]);
+  DowloadObjectReleaseHelper* myobj;
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&myobj));
+  assert(status == napi_ok);
+  download_resulterRef._handle = myobj->GetDownloadHandle();
 
   void* bufferPtr = NULL;
   size_t lengthOfBuffer;
@@ -266,7 +250,7 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
  \fn napi_value download_objectc(napi_env env, napi_callback_info info)
  \brief download_objectc function is called from the javascript file
  download_objectc starts  download to the specified key.
-    
+
  */
 //
 napi_value download_objectc(napi_env env, napi_callback_info info) {

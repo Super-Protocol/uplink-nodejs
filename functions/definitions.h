@@ -15,6 +15,8 @@
 using std::string;
 using std::swap;
 
+//fwd declaration
+class DowloadObjectReleaseHelper;
 
   typedef struct {
   int async_action_status;
@@ -44,7 +46,7 @@ using std::swap;
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  UplinkDownload download_result;
+  DowloadObjectReleaseHelper* dowloadObjectReleaseHelper;
   UplinkError* error_result;
 } downloadCloseObj;
 

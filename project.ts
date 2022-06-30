@@ -60,7 +60,7 @@ export class ProjectResultStruct {
                 );
 
             }),
-            downloadResultReturn = new DownloadResultStruct(download.download);
+            downloadResultReturn = new DownloadResultStruct(download);
 
 
         return downloadResultReturn;

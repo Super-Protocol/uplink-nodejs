@@ -1,9 +1,10 @@
 // Copyright 2020 Storj Storj
 /** @mainpage Node-js bindings
  *  It uses napi for creating node module
- * 
+ *
  */
 #include "libUplink.h"
+#include "functions/release_objects_helpers.h"
 #include <utility>
 #include <string>
 /*! \fn void reverse(char str[], int length)
@@ -21,7 +22,7 @@ void reverse(char str[], int length) {
 }
 /*! \fn itoa(int num, char* str, int base)
     \brief itoa function negative numbers are handled only with
-     base 10. Otherwise numbers are considered unsigned , 
+     base 10. Otherwise numbers are considered unsigned ,
     itoa returns a string
 */
 char* itoa(int num, char* str, int base) {
@@ -194,7 +195,7 @@ napi_value createBucketResult(napi_env env, string resultType,
 /*! \fn napi_value createObjectResult(napi_env env,
   Object* objectPtr)
      \brief createObjectResult create object's result whether it is generated or not
- 
+
   */
 //
 napi_value createObjectResult(napi_env env,
@@ -221,7 +222,7 @@ napi_value createObjectResult(napi_env env,
     assert(status == napi_ok);
 
     napi_value keyObjectNAPI;
-    
+
     status = napi_create_string_utf8(env,
       objectPtr-> key, NAPI_AUTO_LENGTH, &keyObjectNAPI);
     assert(status == napi_ok);
@@ -371,9 +372,9 @@ napi_value createObjectResult(napi_env env,
 }
 /*!
  \fn napi_value list_objectsc(napi_env env, napi_callback_info info)
- \brief list_objectsc creates list of objects 
+ \brief list_objectsc creates list of objects
   promise function makes list_objectsc asynchronous function
- 
+
  */
 //
 napi_value list_objectsc(napi_env env, napi_callback_info info) {
@@ -565,7 +566,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
  \fn napi_value list_bucketsc(napi_env env, napi_callback_info info)
   \brief list_bucketsc provide list of buckets
   using promise makes list_bucketsc asynchronous
-  
+
  */
 
 napi_value list_bucketsc(napi_env env, napi_callback_info info) {
@@ -722,7 +723,7 @@ napi_value Init(napi_env env, napi_value exports) {
   status = napi_define_properties(
     env, exports, 1, &open_project);
   assert(status == napi_ok);
-  
+
      napi_property_descriptor config_open_project =
   DECLARE_NAPI_METHOD(
     "config_open_project", config_open_projectc);
@@ -730,7 +731,7 @@ napi_value Init(napi_env env, napi_value exports) {
     env, exports, 1, &config_open_project);
   assert(status == napi_ok);
 
-    
+
   napi_property_descriptor close_project = DECLARE_NAPI_METHOD("close_project", close_projectc);
   status = napi_define_properties(env, exports, 1, &close_project);
   assert(status == napi_ok);
@@ -739,7 +740,7 @@ napi_value Init(napi_env env, napi_value exports) {
   status = napi_define_properties(env, exports, 1, &stat_bucket);
   assert(status == napi_ok);
 
-  
+
   napi_property_descriptor create_bucket = DECLARE_NAPI_METHOD("create_bucket", create_bucketc);
   status = napi_define_properties(env, exports, 1, &create_bucket);
   assert(status == napi_ok);
@@ -752,7 +753,7 @@ napi_value Init(napi_env env, napi_value exports) {
   status = napi_define_properties(env, exports, 1, &list_buckets);
   assert(status == napi_ok);
 
-    
+
   napi_property_descriptor delete_bucket = DECLARE_NAPI_METHOD("delete_bucket", delete_bucketc);
   status = napi_define_properties(env, exports, 1, &delete_bucket);
   assert(status == napi_ok);
@@ -764,35 +765,35 @@ napi_value Init(napi_env env, napi_value exports) {
 napi_property_descriptor delete_object = DECLARE_NAPI_METHOD("delete_object", delete_objectc);
   status = napi_define_properties(env, exports, 1, &delete_object);
   assert(status == napi_ok);
-   
+
   napi_property_descriptor upload_object = DECLARE_NAPI_METHOD("upload_object", upload_objectc);
   status = napi_define_properties(env, exports, 1, &upload_object);
   assert(status == napi_ok);
- 
+
   napi_property_descriptor upload_write = DECLARE_NAPI_METHOD("upload_write", upload_writec);
   status = napi_define_properties(env, exports, 1, &upload_write);
   assert(status == napi_ok);
-  
+
   napi_property_descriptor upload_commit = DECLARE_NAPI_METHOD("upload_commit", upload_commitc);
   status = napi_define_properties(env, exports, 1, &upload_commit);
   assert(status == napi_ok);
-  
+
   napi_property_descriptor download_object = DECLARE_NAPI_METHOD("download_object", download_objectc);
   status = napi_define_properties(env, exports, 1, &download_object);
   assert(status == napi_ok);
-  
+
   napi_property_descriptor download_read = DECLARE_NAPI_METHOD("download_read", download_readc);
   status = napi_define_properties(env, exports, 1, &download_read);
   assert(status == napi_ok);
-  
+
   napi_property_descriptor close_download = DECLARE_NAPI_METHOD("close_download", close_downloadc);
   status = napi_define_properties(env, exports, 1, &close_download);
   assert(status == napi_ok);
- 
+
   napi_property_descriptor list_objects = DECLARE_NAPI_METHOD("list_objects", list_objectsc);
   status = napi_define_properties(env, exports, 1, &list_objects);
   assert(status == napi_ok);
-   
+
   napi_property_descriptor access_share = DECLARE_NAPI_METHOD("access_share", access_sharec);
   status = napi_define_properties(env, exports, 1, &access_share);
   assert(status == napi_ok);
@@ -800,19 +801,19 @@ napi_property_descriptor delete_object = DECLARE_NAPI_METHOD("delete_object", de
   napi_property_descriptor access_serialize = DECLARE_NAPI_METHOD("access_serialize", access_serializec);
   status = napi_define_properties(env, exports, 1, &access_serialize);
   assert(status == napi_ok);
-  
+
   napi_property_descriptor download_info = DECLARE_NAPI_METHOD("download_info", download_infoc);
   status = napi_define_properties(env, exports, 1, &download_info);
   assert(status == napi_ok);
-  
+
   napi_property_descriptor upload_info = DECLARE_NAPI_METHOD("upload_info", upload_infoc);
   status = napi_define_properties(env, exports, 1, &upload_info);
   assert(status == napi_ok);
-  
+
   napi_property_descriptor upload_abort = DECLARE_NAPI_METHOD("upload_abort", upload_abortc);
   status = napi_define_properties(env, exports, 1, &upload_abort);
   assert(status == napi_ok);
- 
+
   napi_property_descriptor upload_set_custom_metadata = DECLARE_NAPI_METHOD("upload_set_custom_metadata", upload_set_custom_metadatac);
   status = napi_define_properties(env, exports, 1, &upload_set_custom_metadata);
   assert(status == napi_ok);
@@ -824,6 +825,7 @@ napi_property_descriptor delete_object = DECLARE_NAPI_METHOD("delete_object", de
   napi_property_descriptor uplink_access_override_encryption_key = DECLARE_NAPI_METHOD("access_override_encryption_key", uplink_access_override_encryption_keyc);
   status = napi_define_properties(env, exports, 1, &uplink_access_override_encryption_key);
   assert(status == napi_ok);
+  DowloadObjectReleaseHelper::Init(env, exports);
 
   return exports;
 }
