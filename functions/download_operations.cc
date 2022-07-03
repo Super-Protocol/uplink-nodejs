@@ -134,7 +134,7 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
   DownloadObjectReleaseHelper* downloadReleaseHelper;
   status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&downloadReleaseHelper));
   assert(status == napi_ok);
-  obj->downloadReleaseHelper = downloadReleaseHelper;
+  obj->downloadObjectReleaseHelper = downloadReleaseHelper;
 
   napi_value resource_name;
   napi_create_string_utf8(env, "downloadClose",
