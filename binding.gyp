@@ -31,7 +31,7 @@
           {
             "target_name": "uplink",
             'include_dirs': ['<(module_root_dir)', "./functions"],
-            "sources":["./libUplink.cc", "./functions/promises_execute.cc", "./functions/promises_complete.cc", "./functions/project_operations.cc", "./functions/download_operations.cc", "./functions/upload_operations.cc", "./functions/access_operations.cc", "./functions/bucket_operations.cc", "./functions/object_operations.cc"],
+            "sources":["./libUplink.cc", "./functions/promises_execute.cc", "./functions/promises_complete.cc", "./functions/project_operations.cc", "./functions/download_operations.cc", "./functions/upload_operations.cc", "./functions/access_operations.cc", "./functions/bucket_operations.cc", "./functions/object_operations.cc", "./functions/release_objects_helpers.cc"],
             "copies":[{
             "destination":"<(module_root_dir)/build/Release",
             "files":["<(module_root_dir)/libuplinkcv1.2.4.dylib","<(module_root_dir)/libuplinkcv1.2.4.h","<(module_root_dir)/libuplinkcversion.h","<(module_root_dir)/uplink_definitions.h"]
