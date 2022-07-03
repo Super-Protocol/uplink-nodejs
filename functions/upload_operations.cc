@@ -1,15 +1,16 @@
 // Copyright 2020 Storj Storj
 /** @mainpage Node-js bindings
  *  It uses napi for creating node module
- * 
+ *
  */
 #include "upload_operations.h"
+#include "release_objects_helpers.h"
 #include <string>
 /*!
- \fn napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) 
- \brief upload_set_custom_metadatac function is called from the javascript file 
+ \fn napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info)
+ \brief upload_set_custom_metadatac function is called from the javascript file
   there are restrictions on what can be stored in custom metadata.
-  
+
  */
 napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   napi_status status;
@@ -59,28 +60,18 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  bool propertyexists = false;
-  napi_value ObjectkeyNAPI;
-  string handle = "_handle";
-  status = napi_create_string_utf8(env,
-    const_cast<char* > (handle.c_str()), NAPI_AUTO_LENGTH ,
-    &ObjectkeyNAPI);
-  assert(status == napi_ok);
-  //
-  status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
-  assert(status == napi_ok);
-  if (!propertyexists) {
+  if (!UplinkObjectReleaseHelper::IsUplinkObjectReleaseHelper(env, args[0])) {
       free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
+
+  UploadObjectReleaseHelper* releaseHelper;
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&releaseHelper));
+  assert(status == napi_ok);
   UplinkUpload upload_result;
-  upload_result._handle = getHandleValue(env, args[0]);
-  if (upload_result._handle == 0) {
-      free(obj);
-    napi_throw_type_error(env, nullptr, "\nWrong object passed\n");
-    return NULL;
-  }
+  upload_result._handle =  releaseHelper->GetHandle();
+
   // Checking Property exits aur not
   bool entriesExists = false;
   napi_value entriesStringNAPI;
@@ -213,10 +204,10 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   return promise;
 }
 /*!
- \fn napi_value upload_abortc(napi_env env, napi_callback_info info) 
- \brief upload_abortc function is called from the javascript file 
+ \fn napi_value upload_abortc(napi_env env, napi_callback_info info)
+ \brief upload_abortc function is called from the javascript file
   upload_abortc function aborts the upload
-  
+
  */
 //
 napi_value upload_abortc(napi_env env, napi_callback_info info) {
@@ -258,23 +249,17 @@ napi_value upload_abortc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  bool propertyexists = false;
-  napi_value ObjectkeyNAPI;
-  string handle = "_handle";
-  status = napi_create_string_utf8(env,
-    const_cast<char* > (handle.c_str()), NAPI_AUTO_LENGTH ,
-    &ObjectkeyNAPI);
-  assert(status == napi_ok);
-  //
-  status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
-  assert(status == napi_ok);
-  if (!propertyexists) {
+  if (!UplinkObjectReleaseHelper::IsUplinkObjectReleaseHelper(env, args[0])) {
       free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
+
+  UploadObjectReleaseHelper* releaseHelper;
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&releaseHelper));
+  assert(status == napi_ok);
   UplinkUpload upload_result;
-  upload_result._handle = getHandleValue(env, args[0]);
+  upload_result._handle =  releaseHelper->GetHandle();
 
   obj->upload_result = upload_result;
   napi_value resource_name;
@@ -286,10 +271,10 @@ napi_value upload_abortc(napi_env env, napi_callback_info info) {
   return promise;
 }
 /*!
- \fn napi_value upload_infoc(napi_env env, napi_callback_info info) 
- \brief upload_infoc function is called from the javascript file 
+ \fn napi_value upload_infoc(napi_env env, napi_callback_info info)
+ \brief upload_infoc function is called from the javascript file
    upload_infoc upload the information .
-  
+
  */
 napi_value upload_infoc(napi_env env, napi_callback_info info) {
   napi_status status;
@@ -332,29 +317,18 @@ napi_value upload_infoc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  bool propertyexists = false;
-  napi_value ObjectkeyNAPI;
-  string handle = "_handle";
-  status = napi_create_string_utf8(env,
-    const_cast<char* > (handle.c_str()), NAPI_AUTO_LENGTH ,
-    &ObjectkeyNAPI);
-  assert(status == napi_ok);
-  //
-  status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
-  assert(status == napi_ok);
-  if (!propertyexists) {
+  if (!UplinkObjectReleaseHelper::IsUplinkObjectReleaseHelper(env, args[0])) {
       free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
 
+  UploadObjectReleaseHelper* releaseHelper;
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&releaseHelper));
+  assert(status == napi_ok);
   UplinkUpload upload_result;
-  upload_result._handle = getHandleValue(env, args[0]);
-  if (upload_result._handle == 0) {
-      free(obj);
-    napi_throw_type_error(env, nullptr, "\nInvalid Object\n");
-    return NULL;
-  }
+  upload_result._handle =  releaseHelper->GetHandle();
+
   obj->upload_result = upload_result;
   napi_value resource_name;
   napi_create_string_utf8(env, "upladInfoObject",
@@ -365,10 +339,10 @@ napi_value upload_infoc(napi_env env, napi_callback_info info) {
   return promise;
 }
 /*!
- \fn napi_value upload_commitc(napi_env env, napi_callback_info info) 
- \brief upload_commitc function is called from the javascript file 
+ \fn napi_value upload_commitc(napi_env env, napi_callback_info info)
+ \brief upload_commitc function is called from the javascript file
    upload_commitc commits the uploaded data.
-  
+
  */
 napi_value upload_commitc(napi_env env, napi_callback_info info) {
   napi_status status;
@@ -411,29 +385,18 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  bool propertyexists = false;
-  napi_value ObjectkeyNAPI;
-  string handle = "_handle";
-  status = napi_create_string_utf8(env,
-    const_cast<char* > (handle.c_str()), NAPI_AUTO_LENGTH , &ObjectkeyNAPI);
-  assert(status == napi_ok);
-  //
-  status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
-  assert(status == napi_ok);
-  if (!propertyexists) {
-      free(obj);
-    napi_throw_type_error(env, nullptr,
-      "\nInvalid Object \n");
-    return NULL;
-  }
-
-  UplinkUpload upload_result;
-  upload_result._handle = getHandleValue(env, args[0]);
-  if (upload_result._handle == 0) {
+ if (!UplinkObjectReleaseHelper::IsUplinkObjectReleaseHelper(env, args[0])) {
       free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
+
+  UploadObjectReleaseHelper* releaseHelper;
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&releaseHelper));
+  assert(status == napi_ok);
+  UplinkUpload upload_result;
+  upload_result._handle =  releaseHelper->GetHandle();
+
   obj->upload_result = upload_result;
   napi_value resource_name;
   napi_create_string_utf8(env, "uploadCommit",
@@ -444,11 +407,11 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
   return promise;
 }
 /*!
- \fn napi_value upload_writec(napi_env env, napi_callback_info info) 
- \brief upload_writec function is called from the javascript file 
+ \fn napi_value upload_writec(napi_env env, napi_callback_info info)
+ \brief upload_writec function is called from the javascript file
    upload_write uploads len(p) bytes from p to the object's data stream.
    any error encountered that caused the write to stop early.
-  
+
  */
 napi_value upload_writec(napi_env env, napi_callback_info info) {
   napi_status status;
@@ -510,29 +473,18 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  bool propertyexists = false;
-  napi_value ObjectkeyNAPI;
-  string handle = "_handle";
-  status = napi_create_string_utf8(env,
-    const_cast<char* > (handle.c_str()), NAPI_AUTO_LENGTH , &ObjectkeyNAPI);
-  assert(status == napi_ok);
-  //
-  status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
-  assert(status == napi_ok);
-  if (!propertyexists) {
-      free(obj);
-    napi_throw_type_error(env, nullptr,
-      "\nInvalid Object \n");
-    return NULL;
-  }
-
-  UplinkUpload upload_resultRef;
-  upload_resultRef._handle = getHandleValue(env, args[0]);
-  if (upload_resultRef._handle == 0) {
+  if (!UplinkObjectReleaseHelper::IsUplinkObjectReleaseHelper(env, args[0])) {
       free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
+
+  UploadObjectReleaseHelper* releaseHelper;
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&releaseHelper));
+  assert(status == napi_ok);
+  UplinkUpload upload_resultRef;
+  upload_resultRef._handle =  releaseHelper->GetHandle();
+
   bool buffertype1;
   status = napi_is_arraybuffer(env, args[1],
     &buffertype1);
@@ -564,10 +516,10 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
   return promise;
 }
 /*!
- \fn napi_value upload_objectc(napi_env env, napi_callback_info info) 
- \brief upload_objectc function is called from the javascript file 
+ \fn napi_value upload_objectc(napi_env env, napi_callback_info info)
+ \brief upload_objectc function is called from the javascript file
    upload_objectc starts an upload to the specified key.
-  
+
  */
 napi_value upload_objectc(napi_env env, napi_callback_info info) {
   napi_status status;
@@ -686,30 +638,30 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
     convertedvalue, &bufsize);
   assert(status == napi_ok);
 
-      if (checktypeofinput == napi_null) {
-          obj->uploadoptionSet = 0;
-      } else {
-        UplinkUploadOptions uploadOptions;
-        napi_value expiresNAPI;
-        obj->uploadoptionSet = 1;
-        status = napi_get_named_property(env, args[3], "expires",
-          &expiresNAPI);
-        assert(status == napi_ok);
+  if (checktypeofinput == napi_null) {
+      obj->uploadoptionSet = 0;
+  } else {
+    UplinkUploadOptions uploadOptions;
+    napi_value expiresNAPI;
+    obj->uploadoptionSet = 1;
+    status = napi_get_named_property(env, args[3], "expires",
+      &expiresNAPI);
+    assert(status == napi_ok);
 
-        int64_t expires;
-        status = napi_get_value_int64(env, expiresNAPI, &expires);
-        assert(status == napi_ok);
-        uploadOptions.expires = expires;
-        obj->uploadOptions = uploadOptions;
-      }
-      obj->bucketname = bucketName;
-      obj->objectkey = objectKey;
-      obj->project = project_result;
-      napi_value resource_name;
-      napi_create_string_utf8(env, "uploadObject",
-      NAPI_AUTO_LENGTH, &resource_name);
-      napi_create_async_work(env, NULL, resource_name, uploadObjectExecute,
-      uploadObjectComplete, obj, &obj->work);
-      napi_queue_async_work(env, obj->work);
-      return promise;
+    int64_t expires;
+    status = napi_get_value_int64(env, expiresNAPI, &expires);
+    assert(status == napi_ok);
+    uploadOptions.expires = expires;
+    obj->uploadOptions = uploadOptions;
+  }
+  obj->bucketname = bucketName;
+  obj->objectkey = objectKey;
+  obj->project = project_result;
+  napi_value resource_name;
+  napi_create_string_utf8(env, "uploadObject",
+  NAPI_AUTO_LENGTH, &resource_name);
+  napi_create_async_work(env, NULL, resource_name, uploadObjectExecute,
+  uploadObjectComplete, obj, &obj->work);
+  napi_queue_async_work(env, obj->work);
+  return promise;
 }

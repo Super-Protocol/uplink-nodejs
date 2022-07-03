@@ -55,7 +55,7 @@ napi_value download_infoc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  if (!DowloadObjectReleaseHelper::IsDowloadObjectReleaseHelper(env, args[0])) {
+  if (!UplinkObjectReleaseHelper::IsUplinkObjectReleaseHelper(env, args[0])) {
       free(obj);
     napi_throw_type_error(env, nullptr,
       "\nInvalid Object \n");
@@ -63,10 +63,10 @@ napi_value download_infoc(napi_env env, napi_callback_info info) {
   }
 
   UplinkDownload download_result;
-  DowloadObjectReleaseHelper* myobj;
-  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&myobj));
+  UplinkObjectReleaseHelper* releaseHelper;
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&releaseHelper));
   assert(status == napi_ok);
-  download_result._handle = myobj->GetDownloadHandle();
+  download_result._handle = releaseHelper->GetHandle();
 
   obj->download_result = download_result;
   napi_value resource_name;
@@ -124,17 +124,17 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  if (!DowloadObjectReleaseHelper::IsDowloadObjectReleaseHelper(env, args[0])) {
+  if (!UplinkObjectReleaseHelper::IsUplinkObjectReleaseHelper(env, args[0])) {
       free(obj);
     napi_throw_type_error(env, nullptr,
       "\nInvalid Object \n");
     return NULL;
   }
 
-  DowloadObjectReleaseHelper* downloadReleaseHelper;
+  DownloadObjectReleaseHelper* downloadReleaseHelper;
   status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&downloadReleaseHelper));
   assert(status == napi_ok);
-  obj->dowloadObjectReleaseHelper = downloadReleaseHelper;
+  obj->downloadReleaseHelper = downloadReleaseHelper;
 
   napi_value resource_name;
   napi_create_string_utf8(env, "downloadClose",
@@ -144,7 +144,6 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
   napi_queue_async_work(env, obj->work);
   return promise;
 }
-
 /*!
  \fn napi_value download_readc(napi_env env, napi_callback_info info)
  \brief download_readc function is called from the javascript file
@@ -214,7 +213,7 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  if (!DowloadObjectReleaseHelper::IsDowloadObjectReleaseHelper(env, args[0])) {
+  if (!UplinkObjectReleaseHelper::IsUplinkObjectReleaseHelper(env, args[0])) {
       free(obj);
     napi_throw_type_error(env, nullptr,
       "\nInvalid Object \n");
@@ -222,10 +221,10 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   }
 
   UplinkDownload download_resulterRef;
-  DowloadObjectReleaseHelper* myobj;
-  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&myobj));
+  UplinkObjectReleaseHelper* releaseHelper;
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&releaseHelper));
   assert(status == napi_ok);
-  download_resulterRef._handle = myobj->GetDownloadHandle();
+  download_resulterRef._handle = releaseHelper->GetHandle();
 
   void* bufferPtr = NULL;
   size_t lengthOfBuffer;

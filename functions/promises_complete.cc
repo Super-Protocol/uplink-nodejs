@@ -212,7 +212,7 @@ napi_status status, void* data) {
       createError(env, error_result.code, errorMessagePtr));
     }
   } else {
-    status = napi_resolve_deferred(env, obj->deferred, DowloadObjectReleaseHelper::CreateInstanceAndSetDownloadResult(env, download_result));
+    status = napi_resolve_deferred(env, obj->deferred, DownloadObjectReleaseHelper::CreateInstanceAndSetDownloadResult(env, download_result));
   }
   if (status != napi_ok) {
     napi_throw_error(env, NULL, "Failed to return promise");
@@ -378,6 +378,7 @@ napi_status status, void* data) {
     napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
+  uplink_free_write_result(obj->write_result);
   free(obj);
 }
 /*!
@@ -398,12 +399,7 @@ void uploadObjectComplete(napi_env env, napi_status status, void* data) {
       createError(env, error_result.code, errorMessagePtr));
     }
   } else {
-    UplinkUpload upload = *(upload_result.upload);
-    size_t handlevalue = upload._handle;
-
-    napi_value uploadResultNAPI = createResult(env, "upload", handlevalue);
-    //
-    status = napi_resolve_deferred(env, obj->deferred, uploadResultNAPI);
+    status = napi_resolve_deferred(env, obj->deferred, UploadObjectReleaseHelper::CreateInstanceAndSetUploadResult(env, upload_result));
 //
   }
   if (status != napi_ok) {
@@ -592,6 +588,7 @@ void closeProjectPromiseComplete(napi_env env, napi_status status, void* data) {
     napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
+  //uplink_free_project_result(obj->project_result);
   free(obj);
 }
 /*!

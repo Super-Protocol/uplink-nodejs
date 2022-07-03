@@ -87,7 +87,7 @@ export class ProjectResultStruct {
                 );
 
             }),
-            uploadResultReturn = new UploadResultStruct(upload.upload);
+            uploadResultReturn = new UploadResultStruct(upload);
 
 
         return uploadResultReturn;

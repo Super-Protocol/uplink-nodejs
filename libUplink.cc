@@ -825,7 +825,7 @@ napi_property_descriptor delete_object = DECLARE_NAPI_METHOD("delete_object", de
   napi_property_descriptor uplink_access_override_encryption_key = DECLARE_NAPI_METHOD("access_override_encryption_key", uplink_access_override_encryption_keyc);
   status = napi_define_properties(env, exports, 1, &uplink_access_override_encryption_key);
   assert(status == napi_ok);
-  DowloadObjectReleaseHelper::Init(env, exports);
+  UplinkObjectReleaseHelper::Init(env, exports);
 
   return exports;
 }

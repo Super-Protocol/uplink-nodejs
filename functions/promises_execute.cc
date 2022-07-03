@@ -51,7 +51,7 @@ void downloadInfoPromiseExecute(napi_env env, void* data) {
 
 void downloadClosePromiseExecute(napi_env env, void* data) {
   downloadCloseObj *obj = (downloadCloseObj*)data;
-  obj->error_result = obj->dowloadObjectReleaseHelper->Close();
+  obj->error_result = obj->downloadObjectReleaseHelper->Close();
 }
 
 /*!
