@@ -9,8 +9,7 @@ GIT_REPO=https://github.com/storj/uplink-c
 UPLINKC_NAME=uplink-c
 UPLINKC_VERSION=v1.2.2
 #Library Name
-LIBRARY_NAME_LINUX=libuplinkcv1.2.4.a
-LIBRARY_NAME_DARWIN=libuplinkcv1.2.4.dylib
+LIBRARY_NAME_POSIX=libuplinkcv1.2.4.a
 LIBRARY_NAME_WIN=libuplinkcv1.2.4.dll
 LIBRARY_UPLINK=*.h
 DELETE_LIBRARY_HEADER=libuplinkcv1.2.4.h
@@ -35,14 +34,8 @@ else
   if [ ! -d $(UPLINKC_NAME) ]; then\
     git clone -b $(UPLINKC_VERSION) $(GIT_REPO);\
   fi;\
-  if [ $(shell uname) = Darwin ]; then\
-    LIBRARY_NAME="$(LIBRARY_NAME_DARWIN)";\
-  fi;\
-  if [ $(shell uname) = Linux ]; then\
-    LIBRARY_NAME="$(LIBRARY_NAME_LINUX)";\
-  fi;\
   cd $(UPLINKC_NAME);\
-  $(GOBUILD) -o ../$$LIBRARY_NAME -buildmode=c-archive;\
+  $(GOBUILD) -o ../$(LIBRARY_NAME_POSIX) -buildmode=c-archive;\
   mv $(LIBRARY_UPLINK) ../;\
   cd ../;\
   cp error.js ./$(JSFOLDER);\

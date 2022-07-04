@@ -31,16 +31,11 @@
             "target_name": "uplink",
             'include_dirs': ['<(module_root_dir)', "./functions"],
             "sources":["./libUplink.cc", "./functions/promises_execute.cc", "./functions/promises_complete.cc", "./functions/project_operations.cc", "./functions/download_operations.cc", "./functions/upload_operations.cc", "./functions/access_operations.cc", "./functions/bucket_operations.cc", "./functions/object_operations.cc", "./functions/release_objects_helpers.cc"],
-            "copies":[{
-            "destination":"<(module_root_dir)/build/Release",
-            "files":["<(module_root_dir)/libuplinkcv1.2.4.dylib","<(module_root_dir)/libuplinkcv1.2.4.h","<(module_root_dir)/libuplinkcversion.h","<(module_root_dir)/uplink_definitions.h"]
-            }],
             "link_settings": {
-              "libraries": ["-L/<(module_root_dir)/build/Release","libuplinkcv1.2.4.dylib"]
+              "libraries":["-L/<(module_root_dir)", "-luplinkcv1.2.4"],
             },
-            "ldflags":["-Wl,-rpath","build/Release"],
             "cxxflags":["-fPIC"],
-            "cflags_cc": ["-fexceptions","-fPIC","-Wno-unknown-pragmas"]
+            "cflags_cc": ["-fexceptions","-fPIC","-Wno-unknown-pragmas"],
           }
         ]
     }]
