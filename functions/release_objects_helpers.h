@@ -3,6 +3,7 @@
 
 #include <node_api.h>
 #include "definitions.h"
+#include <cstdint>
 
 class UplinkObjectReleaseHelper {
 public:
