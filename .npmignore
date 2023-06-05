@@ -1,2 +1,11 @@
 .git/
 .github/
+/node_modules
+/build
+/uplink-c
+*.so
+*.a
+*.dylib
+libuplinkcv1.2.4.h
+uplink_compat.h
+uplink_definitions.h
