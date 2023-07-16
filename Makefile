@@ -7,7 +7,7 @@ GOGET=$(GOCMD) get
 # Uplink-c
 GIT_REPO=https://github.com/Super-Protocol/uplink-c-sp.git
 UPLINKC_NAME=uplink-c-sp
-UPLINKC_VERSION=feature/SP-3173
+UPLINKC_VERSION=v1.7.0-sp
 #Library Name
 LIBRARY_NAME_POSIX=libuplinkcv1.7.0-sp.a
 LIBRARY_NAME_WIN=libuplinkcv1.7.0-sp.dll
