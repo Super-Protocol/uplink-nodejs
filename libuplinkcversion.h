@@ -1,3 +1,3 @@
-#define UPLINKCWINDOWSDLL "../libuplinkcv1.2.4.dll"
-#define UPLINKCWINDOWSHOMEDLL "libuplinkcv1.2.4.dll"
-#define UPLINKCHEADER "../libuplinkcv1.2.4.h"
+#define UPLINKCWINDOWSDLL "../libuplinkcv1.7.0-sp.dll"
+#define UPLINKCWINDOWSHOMEDLL "libuplinkcv1.7.0-sp.dll"
+#define UPLINKCHEADER "../libuplinkcv1.7.0-sp.h"

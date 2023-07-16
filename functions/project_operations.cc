@@ -1,15 +1,15 @@
 // Copyright 2020 Storj Storj
 /** @mainpage Node-js bindings
  *  It uses napi for creating node module
- * 
+ *
  */
 #include "project_operations.h"
 #include <string>
 /*!
- \fn napi_value close_projectc(napi_env env, napi_callback_info info) 
- \brief close_projectc function is called from the javascript file 
- close_projectc closes the project 
-  
+ \fn napi_value close_projectc(napi_env env, napi_callback_info info)
+ \brief close_projectc function is called from the javascript file
+ close_projectc closes the project
+
  */
 napi_value close_projectc(napi_env env, napi_callback_info info) {
   napi_status status;
@@ -86,18 +86,18 @@ napi_value close_projectc(napi_env env, napi_callback_info info) {
   return promise;
 }
 /*!
- \fn napi_value config_open_projectc(napi_env env, napi_callback_info info) 
- \brief config_open_projectc function is called from the javascript file 
+ \fn napi_value config_open_projectc(napi_env env, napi_callback_info info)
+ \brief config_open_projectc function is called from the javascript file
    config_open_project opens project using access grant .
-  
+
  */
 //
 napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   napi_status status;
   napi_value promise;
 
-  size_t argc = 2;
-  napi_value args[2];
+  size_t argc = 3;
+  napi_value args[3];
 
   configOpenProjectPromiseObj *obj = (configOpenProjectPromiseObj *)
   malloc(sizeof(configOpenProjectPromiseObj));
@@ -118,10 +118,10 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  if (argc < 2) {
+  if (argc < 3) {
       free(obj);
     napi_throw_type_error(env, nullptr,
-      "\nWrong number of arguments!! excepted 2 arguments\n");
+      "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
   }
 
@@ -148,6 +148,15 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
+  status = napi_typeof(env, args[2], &checktypeofinput);
+  assert(status == napi_ok);
+  //
+  if (checktypeofinput != napi_number) {
+      free(obj);
+    napi_throw_type_error(env, nullptr,
+      "\nWrong datatype !! third argument excepted to be number type\n");
+    return NULL;
+  }
 
   bool configUserAgentExists, configDialTimeoutMilliSecondsExists,
   configTempDirectoryExists = false;
@@ -276,6 +285,12 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   }
 
   obj->access = access;
+
+  int32_t maximum_concurrent;
+  status = napi_get_value_int32(env, args[2], &maximum_concurrent);
+  assert(status == napi_ok);
+  obj->maximum_concurrent = maximum_concurrent;
+
   napi_value resource_name;
   napi_create_string_utf8(env, "ConfigOpenProject",
   NAPI_AUTO_LENGTH, &resource_name);
@@ -286,18 +301,18 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   return promise;
 }
 /*!
- \fn napi_value open_projectc(napi_env env, napi_callback_info info) 
- \brief open_projectc function is called from the javascript file 
- open_projectc opens the project 
-  
+ \fn napi_value open_projectc(napi_env env, napi_callback_info info)
+ \brief open_projectc function is called from the javascript file
+ open_projectc opens the project
+
  */
 //
 napi_value open_projectc(napi_env env, napi_callback_info info) {
   napi_status status;
   napi_value promise;
 
-  size_t argc = 1;
-  napi_value args[1];
+  size_t argc = 2;
+  napi_value args[2];
 
   openProjectPromiseObj *obj = (openProjectPromiseObj *)
   malloc(sizeof(openProjectPromiseObj));
@@ -318,10 +333,10 @@ napi_value open_projectc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  if (argc < 1) {
+  if (argc < 2) {
       free(obj);
     napi_throw_type_error(env, nullptr,
-      "\nWrong number of arguments!! excepted 1 arguments\n");
+      "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
   }
 
@@ -335,6 +350,17 @@ napi_value open_projectc(napi_env env, napi_callback_info info) {
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
   }
+
+  status = napi_typeof(env, args[1], &checktypeofinput);
+  assert(status == napi_ok);
+  //
+  if (checktypeofinput != napi_number) {
+      free(obj);
+    napi_throw_type_error(env, nullptr,
+      "\nWrong datatype !! second argument excepted to be number type\n");
+    return NULL;
+  }
+
   bool propertyexists = false;
   napi_value ObjectkeyNAPI;
   string handle = "_handle";
@@ -356,7 +382,14 @@ napi_value open_projectc(napi_env env, napi_callback_info info) {
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
+
   obj->access = access;
+
+  int32_t maximum_concurrent;
+  status = napi_get_value_int32(env, args[1], &maximum_concurrent);
+  assert(status == napi_ok);
+  obj->maximum_concurrent = maximum_concurrent;
+
   napi_value resource_name;
   napi_create_string_utf8(env, "OpenProject", NAPI_AUTO_LENGTH, &resource_name);
   napi_create_async_work(env, NULL, resource_name, openProjectPromiseExecute,

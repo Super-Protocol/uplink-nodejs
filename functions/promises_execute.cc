@@ -15,7 +15,11 @@
 
 void openProjectPromiseExecute(napi_env env, void* data) {
   openProjectPromiseObj *obj = (openProjectPromiseObj*)data;
-  obj->project_Result = uplink_open_project(&(obj->access));
+  int32_t *maximum_concurrent = NULL;
+  if (obj->maximum_concurrent > 0) {
+    maximum_concurrent = &(obj->maximum_concurrent);
+  }
+  obj->project_Result = uplink_open_project(&(obj->access), maximum_concurrent);
 }
 /*!
  \fn void listObjectPromiseExecute(napi_env env, void* data)
@@ -239,8 +243,12 @@ void closeProjectPromiseExecute(napi_env env, void* data) {
  */
 void configOpenProjectPromiseExecute(napi_env env, void* data) {
   configOpenProjectPromiseObj *obj = (configOpenProjectPromiseObj*)data;
+  int32_t *maximum_concurrent = NULL;
+  if (obj->maximum_concurrent > 0) {
+    maximum_concurrent = &(obj->maximum_concurrent);
+  }
   obj->project_Result = uplink_config_open_project
-  (obj->config, &(obj->access));
+  (obj->config, &(obj->access), maximum_concurrent);
 }
 /*!
  \fn void ParseAccess(napi_env env, void* data)
