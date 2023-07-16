@@ -3,6 +3,7 @@ import bindings = require("bindings");
 const uplink = bindings("uplink");
 
 import {ProjectResultStruct} from "./project.js";
+import { Config } from "./uplink.js";
 const errorhandle = require("./error.js");
 
 
@@ -21,9 +22,9 @@ export class AccessResultStruct {
      * Input : None
      * Output : Project(Object)
      */
-    async openProject (): Promise<ProjectResultStruct> {
+    async openProject (maximumConcurrent?: number): Promise<ProjectResultStruct> {
 
-        const project = await uplink.open_project(this.access).catch((error: any) => {
+        const project = await uplink.open_project(this.access, maximumConcurrent ?? 0 ).catch((error: any) => {
 
                 errorhandle.storjException(
                     error.error.code,
@@ -43,9 +44,9 @@ export class AccessResultStruct {
      * Input : None
      * Output : Project(Object)
      */
-    async configOpenProject (): Promise<ProjectResultStruct> {
+    async configOpenProject (config: Config, maximumConcurrent?: number): Promise<ProjectResultStruct> {
 
-        const project = await uplink.config_open_project(this.access).catch((error: any) => {
+        const project = await uplink.config_open_project(this.access, config, maximumConcurrent ?? 0).catch((error: any) => {
 
                 errorhandle.storjException(
                     error.error.code,

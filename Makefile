@@ -5,19 +5,18 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 # Uplink-c
-GIT_REPO=https://github.com/storj/uplink-c
-UPLINKC_NAME=uplink-c
-UPLINKC_VERSION=v1.2.2
+GIT_REPO=https://github.com/Super-Protocol/uplink-c-sp.git
+UPLINKC_NAME=uplink-c-sp
+UPLINKC_VERSION=v1.7.0-sp
 #Library Name
-LIBRARY_NAME_POSIX=libuplinkcv1.2.4.a
-LIBRARY_NAME_WIN=libuplinkcv1.2.4.dll
+LIBRARY_NAME_POSIX=libuplinkcv1.7.0-sp.a
+LIBRARY_NAME_WIN=libuplinkcv1.7.0-sp.dll
 LIBRARY_UPLINK=*.h
-DELETE_LIBRARY_HEADER=libuplinkcv1.2.4.h
+DELETE_LIBRARY_HEADER=libuplinkcv1.7.0-sp.h
 #Library Path
 MACOS_DYLIB_DEFAULT_PAYH=/usr/local/lib
 #JSFOLDER
 JSFOLDER=dist
-JSFOLDERLIB=libuplinkcv1.2.4.*
 #Color
 RED_COLOR=\033[31m
 GREEN_COLOR=\033[32m
@@ -36,7 +35,7 @@ else
   fi;\
   cd $(UPLINKC_NAME);\
   $(GOBUILD) -o ../$(LIBRARY_NAME_POSIX) -buildmode=c-archive;\
-  mv $(LIBRARY_UPLINK) ../;\
+  cp $(LIBRARY_UPLINK) ../;\
   cd ../;\
   cp error.js ./$(JSFOLDER);\
   if test -d ./$(UPLINKC_NAME); then rm -rf ./$(UPLINKC_NAME); fi;\

@@ -190,6 +190,7 @@ typedef struct {
   UplinkAccess access;
   UplinkProjectResult project_Result;
   UplinkConfig config;
+  int32_t maximum_concurrent;
 } configOpenProjectPromiseObj;
 
 typedef struct {
@@ -199,6 +200,7 @@ typedef struct {
   napi_value result;
   UplinkAccess access;
   UplinkProjectResult project_Result;
+  int32_t maximum_concurrent;
 } openProjectPromiseObj;
 
 typedef struct {
