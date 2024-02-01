@@ -43,6 +43,8 @@ void configOpenProjectPromiseComplete(napi_env env, napi_status status, void* da
 
 void ParseAccessPromiseComplete(napi_env env, napi_status status, void* data);
 
+void revokeAccessPromiseComplete(napi_env env, napi_status status, void* data);
+
 void ShareAccessPromiseComplete(napi_env env, napi_status status, void* data);
 
 void ConfigRequestAccessWithEncryptionPromiseComplete(napi_env env, napi_status status, void* data);

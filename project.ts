@@ -6,6 +6,7 @@ const uplink = bindings("uplink");
 //
 
 import {DownloadResultStruct} from "./download.js";
+import {AccessResultStruct} from "./access.js";
 const errorhandle = require("./error.js");
 
 import {UploadResultStruct} from "./upload.js";
@@ -290,6 +291,22 @@ export class ProjectResultStruct {
         return bucketInfo;
 
     }
+
+    async revokeAccess (access: AccessResultStruct): Promise<void> {
+
+      await uplink.revoke_access(
+          this.project,
+          access.access,
+      ).catch((error: any) => {
+
+          errorhandle.storjException(
+              error.error.code,
+              error.error.message
+          );
+
+      });
+
+  }
 
 }
 /* eslint-enable */
