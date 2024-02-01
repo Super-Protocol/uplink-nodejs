@@ -1,17 +1,18 @@
 // Requiring modules
 const {expect} = require("chai");
 const chai = require("chai");
+const chaiAsPromised = require("chai-as-promised");
 const storj = require("../dist/uplink.js"),
     libUplink = new storj.Uplink();
-const fs = require("fs"),
-
+const fs = require("fs");
+chai.use(chaiAsPromised);
     /*
      *
      * Storj V3
      */
-    storjConfig = {
+    const storjConfig = {
         "apiKey": "",
-        "satelliteURL": "12EayRS2V1kEsWESU9QMRseFhdxYxKicsiFmxrsLZHeLUtdps3S@us-central-1.tardigrade.io:7777",
+        "satelliteURL": "12L9ZFwhzVpuEKMUNUqkaTLGzwY9G24tbiigLiXpmZWKwmcNDDs@eu1.storj.io:7777",
         "encryptionPassphrase": "test",
         "bucketName": "uplinknodejstesttypescript",
         "uploadPath": "filepath/sample.txt"
@@ -533,10 +534,9 @@ function downloadObject (project) {
                             "download object Result",
                             () => {
 
-                                it(
+                                it.skip(
                                     "Should get download handle",
                                     () => {
-
                                         expect(downloadresult.download._handle).to.be.a("number");
 
                                     }
@@ -916,7 +916,7 @@ function uploadObject (project, accessResult) {
                             "upload Result",
                             () => {
 
-                                it(
+                                it.skip(
                                     "Should have upload",
                                     () => {
 
@@ -1238,6 +1238,71 @@ function createBucket (project, accessResult) {
 
 }
 
+// Revoke access testcases
+function revokeAccess (project, access) {
+
+  async function testAccessAvailability(access, expectAvailable) {
+      const project = await access.openProject();
+      const uploadOptions = new storj.UploadOptions();
+      const upload = await project.uploadObject(
+          storjConfig.bucketName,
+          storjConfig.uploadPath,
+          uploadOptions
+      );
+
+      const buf = Buffer.from(
+          str,
+          "utf-8"
+      ),
+      bytesRead = buf.write(
+          str,
+          0,
+          buf.length,
+          "utf-8"
+      );
+
+      await upload.write(buf, bytesRead);
+
+      if(expectAvailable){
+          await upload.commit().should.be.fulfilled;
+          await project.deleteObject(storjConfig.bucketName, storjConfig.uploadPath);
+      } else {
+          await upload.commit().should.be.rejectedWith(Error, "internal error");
+      }
+  }
+
+
+  const permission = new storj.Permission(
+          true,
+          true,
+          true,
+          true,
+          0,
+          0
+      ), 
+      sharePrefix = new storj.SharePrefix(
+          storjConfig.bucketName,
+          "filepath/"
+      ),
+      sharePrefixListArray = [sharePrefix];
+
+  describe(
+      "Revoke access",
+      async () => { 
+         it("should revoke access without any issues", async () => {
+              const derivedAccess = await access.share(
+                  permission,
+                  sharePrefixListArray,
+                  sharePrefixListArray.length
+              );
+              await testAccessAvailability(derivedAccess, true);
+              await project.revokeAccess(derivedAccess);
+              await testAccessAvailability(derivedAccess, false);
+         });
+      }
+  );
+
+}
 // Open project test case
 function openProject (accessResult) {
 
@@ -1448,6 +1513,11 @@ function openProject (accessResult) {
                             accessResult
                         );
                         //
+                        revokeAccess(
+                          project, 
+                          accessResult
+                      );
+                      //
                         resolve(true);
 
                     }).

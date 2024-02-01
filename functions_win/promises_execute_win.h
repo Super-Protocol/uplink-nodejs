@@ -44,6 +44,8 @@ void closeProjectPromiseExecute(napi_env env, void* data);
 
 void configOpenProjectPromiseExecute(napi_env env, void* data);
 
+void revokeAccessPromiseExecute(napi_env env, void* data);
+
 void ParseAccess(napi_env env, void* data);
 
 void ShareAccessPromiseExecute(napi_env env, void* data);
