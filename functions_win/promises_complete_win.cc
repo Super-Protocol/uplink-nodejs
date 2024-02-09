@@ -1,4 +1,5 @@
 #include "promises_complete_win.h"
+#include "release_objects_helpers.h"
 #include <string>
 
 void openProjectPromiseComplete(napi_env env, napi_status status, void* data) {
@@ -18,7 +19,7 @@ void openProjectPromiseComplete(napi_env env, napi_status status, void* data) {
         size_t handlevalue = project._handle;
 
         napi_value projectNAPIObj = createResult(env, "project", handlevalue);
-      
+
         //
         status = napi_resolve_deferred(env, obj->deferred, projectNAPIObj);
     }
@@ -32,7 +33,7 @@ void openProjectPromiseComplete(napi_env env, napi_status status, void* data) {
 }
 
 void ListObjectsPromiseComplete(napi_env env, napi_status status, void* data) {
-    listObjectsPromiseObj* obj = (listObjectsPromiseObj*)data;
+    listObjectPromiseObj* obj = (listObjectPromiseObj*)data;
     napi_value objectList;
     //
     status = napi_create_object(env, &objectList);
@@ -192,14 +193,7 @@ napi_status status, void* data) {
             createError(env, error_result.code, errorMessagePtr));
         }
     } else {
-        UplinkDownload download = *(download_result.download);
-        size_t handlevalue = download._handle;
-
-
-        napi_value downloadResultNAPI = createResult(env, "download",
-        handlevalue);
-
-        status = napi_resolve_deferred(env, obj->deferred, downloadResultNAPI);
+      status = napi_resolve_deferred(env, obj->deferred, DownloadObjectReleaseHelper::CreateInstanceAndSetDownloadResult(env, download_result));
     }
     if (status != napi_ok) {
         napi_throw_error(env, NULL, "Failed to return promise");
@@ -353,13 +347,7 @@ void uploadObjectComplete(napi_env env, napi_status status, void* data) {
             createError(env, error_result.code, errorMessagePtr));
         }
     } else {
-        UplinkUpload upload = *(upload_result.upload);
-        size_t handlevalue = upload._handle;
-
-        napi_value uploadResultNAPI = createResult(env, "upload", handlevalue);
-
-        //
-        status = napi_resolve_deferred(env, obj->deferred, uploadResultNAPI);
+      status = napi_resolve_deferred(env, obj->deferred, UploadObjectReleaseHelper::CreateInstanceAndSetUploadResult(env, upload_result));
     }
     if (status != napi_ok) {
         napi_throw_error(env, NULL, "Failed to return promise");
@@ -412,7 +400,7 @@ void bucketOperationComplete(napi_env env, napi_status status, void* data) {
     char* errorMessagePtr = error_result.message;
     status = napi_reject_deferred(env, obj->deferred,
     createError(env, error_result.code, errorMessagePtr));
-  } 
+  }
   else if (bucket_result.bucket != NULL) {
     UplinkBucket bucket = *(bucket_result.bucket);
     char* bucketNamePtr = bucket.name;
@@ -560,7 +548,7 @@ void revokeAccessPromiseComplete(napi_env env, napi_status status, void* data) {
     napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
-  uplink_free_error(error_result);
+  //uplink_free_error(error_result);
   free(obj);
 }
 
@@ -610,7 +598,7 @@ void ParseAccessPromiseComplete(napi_env env,
         size_t handlevalue = access._handle;
 
         napi_value AccessNAPIObj = createResult(env, "access", handlevalue);
- 
+
         //
         status = napi_resolve_deferred(env, obj->deferred, AccessNAPIObj);
     }
@@ -668,7 +656,7 @@ napi_status status, void* data) {
         size_t handlevalue = access._handle;
 
         napi_value AccessNAPIObj = createResult(env, "access", handlevalue);
-        
+
         //
         status = napi_resolve_deferred(env, obj->deferred, AccessNAPIObj);
     }
@@ -699,9 +687,9 @@ napi_status status, void* data) {
         size_t handlevalue = access._handle;
 
         napi_value AccessNAPIObj = createResult(env, "access", handlevalue);
- 
+
         status = napi_resolve_deferred(env, obj->deferred, AccessNAPIObj
-        
+
         );
     }
     //
@@ -760,9 +748,9 @@ napi_status status, void* data) {
         size_t handlevalue = encryption_key._handle;
 
         napi_value EncryptionNAPIObj = createResult(env, "encryption_key", handlevalue);
- 
+
         status = napi_resolve_deferred(env, obj->deferred, EncryptionNAPIObj
-        
+
         );
     }
     //

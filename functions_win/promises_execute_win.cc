@@ -1,5 +1,6 @@
 #include "../libuplinkcversion.h"
 #include "promises_execute_win.h"
+#include "release_objects_helpers.h"
 #include <string>
 
 HINSTANCE hGetProcIDDLL = LoadLibrary(UPLINKCWINDOWSDLL);
@@ -16,17 +17,21 @@ void openProjectPromiseExecute(napi_env env, void* data) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found \n");
         } else {
-            typedef UplinkProjectResult(__stdcall* pICProjectResult)(UplinkAccess*);
+            typedef UplinkProjectResult(__stdcall* pICProjectResult)(UplinkAccess*, int32_t*);
             pICProjectResult open_project;
             open_project = pICProjectResult(fn);
-            obj->project_Result = open_project(&(obj->access));
+            int32_t *maximum_concurrent = NULL;
+            if (obj->maximum_concurrent > 0) {
+                maximum_concurrent = &(obj->maximum_concurrent);
+            }
+            obj->project_Result = open_project(&(obj->access), maximum_concurrent);
         }
     }
 }
 
 void ListObjectsPromiseExecute(napi_env env, void* data) {
-    listObjectsPromiseObj* obj =
-        reinterpret_cast<listObjectsPromiseObj*>(data);
+    listObjectPromiseObj* obj =
+        reinterpret_cast<listObjectPromiseObj*>(data);
     if (!hGetProcIDDLL) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
@@ -74,23 +79,8 @@ void downloadInfoPromiseExecute(napi_env env, void* data) {
 }
 
 void downloadClosePromiseExecute(napi_env env, void* data) {
-    downloadCloseObj* obj =
-        reinterpret_cast<downloadCloseObj*>(data);
-    if (!hGetProcIDDLL) {
-        free(obj);
-        napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
-    } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_close_download");
-        if (!fn) {
-            free(obj);
-            napi_throw_type_error(env, nullptr, "\n Function not found \n");
-        } else {
-            typedef UplinkError* (__stdcall* pICError)(UplinkDownload*);
-            pICError close_download;
-            close_download = pICError(fn);
-            obj->error_result = close_download(&obj->download_result);
-        }
-    }
+  downloadCloseObj *obj = (downloadCloseObj*)data;
+  obj->error_result = obj->downloadObjectReleaseHelper->Close();
 }
 
 void downloadReadPromiseExecute(napi_env env, void* data) {
@@ -445,7 +435,7 @@ void closeProjectPromiseExecute(napi_env env, void* data) {
 }
 
 /*!
- \fn void revokeAccessPromiseExecute(napi_env env, void* data) 
+ \fn void revokeAccessPromiseExecute(napi_env env, void* data)
  \brief revokeAccessPromiseExecute used to implement the uplink-c library function
       revokeAccessPromiseExecute revoke access using promise
  */
@@ -482,12 +472,16 @@ void configOpenProjectPromiseExecute(napi_env env, void* data) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found \n");
         } else {
+            int32_t *maximum_concurrent = NULL;
+            if (obj->maximum_concurrent > 0) {
+                maximum_concurrent = &(obj->maximum_concurrent);
+            }
             typedef UplinkProjectResult(__stdcall* pICProjectResult)(UplinkConfig,
-                UplinkAccess*);
+                UplinkAccess*, int32_t*);
             pICProjectResult config_open_project;
             config_open_project = pICProjectResult(fn);
             obj->project_Result = config_open_project(obj->config,
-            &(obj->access));
+            &(obj->access), maximum_concurrent);
         }
     }
 }
@@ -652,4 +646,3 @@ void accessOverRidePromiseExecute(napi_env env, void* data) {
       }
   }
 }
-

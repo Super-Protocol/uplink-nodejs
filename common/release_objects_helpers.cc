@@ -2,6 +2,12 @@
 
 napi_ref UplinkObjectReleaseHelper::constructor;
 
+#ifdef _WIN32
+  #include <windows.h>
+  #include "../libuplinkcversion.h"
+  HINSTANCE hGetProcIDDLL2 = LoadLibrary(UPLINKCWINDOWSDLL);
+#endif
+
 UplinkObjectReleaseHelper::UplinkObjectReleaseHelper()
     : objEnv(nullptr), objWrapper(nullptr) {}
 
@@ -139,13 +145,23 @@ size_t DownloadObjectReleaseHelper::GetHandle()
 
 UplinkError* DownloadObjectReleaseHelper::Close()
 {
+  UplinkError* err = nullptr;
   if (resultExist) {
-    auto err = uplink_close_download(downloadResult.download);
+#ifdef _WIN32
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL2), "uplink_close_download");
+    if (fn) {
+        typedef UplinkError* (__stdcall* pICError)(UplinkDownload*);
+        pICError close_download;
+        close_download = pICError(fn);
+        err = close_download(downloadResult.download);
+    }
+#else
+    err = uplink_close_download(downloadResult.download);
     uplink_free_download_result(downloadResult);
+#endif
     resultExist = false;
-    return err;
   }
-  return nullptr;
+  return err;
 }
 
 napi_value UploadObjectReleaseHelper::CreateInstanceAndSetUploadResult(napi_env env, const UplinkUploadResult &result)
@@ -179,7 +195,7 @@ size_t UploadObjectReleaseHelper::GetHandle()
 UplinkError* UploadObjectReleaseHelper::Close()
 {
   if (resultExist) {
-    uplink_free_upload_result(uploadResult);
+    //uplink_free_upload_result(uploadResult);
     resultExist = false;
   }
   return nullptr;

@@ -10,8 +10,12 @@
 #include <string.h>
 #include <iostream>
 #include "../uplink_definitions.h"
-#include "../libuplinkcversion.h"
-#include UPLINKCHEADER
+#ifdef _WIN32
+  #include <windows.h>
+#else
+  #include "../libuplinkcversion.h"
+  #include UPLINKCHEADER
+#endif
 using std::string;
 using std::swap;
 
