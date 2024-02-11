@@ -4,7 +4,7 @@
  *
  */
 #include "libUplink.h"
-#include "functions/release_objects_helpers.h"
+#include "release_objects_helpers.h"
 #include <utility>
 #include <string>
 /*! \fn void reverse(char str[], int length)
