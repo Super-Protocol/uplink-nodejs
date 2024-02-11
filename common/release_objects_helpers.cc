@@ -154,6 +154,8 @@ UplinkError* DownloadObjectReleaseHelper::Close()
         pICError close_download;
         close_download = pICError(fn);
         err = close_download(downloadResult.download);
+
+        //TODO: call uplink_free_download_result
     }
 #else
     err = uplink_close_download(downloadResult.download);
@@ -195,7 +197,10 @@ size_t UploadObjectReleaseHelper::GetHandle()
 UplinkError* UploadObjectReleaseHelper::Close()
 {
   if (resultExist) {
-    //uplink_free_upload_result(uploadResult);
+#ifdef _WIN32
+#else
+    uplink_free_upload_result(uploadResult);
+#endif
     resultExist = false;
   }
   return nullptr;
