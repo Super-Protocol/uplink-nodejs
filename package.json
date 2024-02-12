@@ -9,6 +9,7 @@
     "rebuild": "make && (node-gyp configure) && (node-gyp rebuild)",
     "prebuild": "prebuild --runtime napi --all --strip --verbose --include-regex \"\\.(node|dll)$\"",
     "upload": "prebuild --runtime napi",
+    "bump": "npm version prerelease --preid=beta",
     "patch:beta": "npm version prepatch --preid=beta",
     "prepare": "tsc"
   },
