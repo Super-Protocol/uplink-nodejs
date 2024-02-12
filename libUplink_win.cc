@@ -565,7 +565,7 @@ napi_value createObjectResult(napi_env env,
   {name, 0, func, 0, 0, 0, napi_default, 0 }
 
 
-bool GetLibraryPath() {
+void GetLibraryPath() {
     HMODULE hModule = NULL;
     // Получаем хендл текущей библиотеки
     if (GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
