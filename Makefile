@@ -25,7 +25,7 @@ RESET_COLOR=\033[0m
 build:
 ifdef OS
 	git clone -b ${UPLINKC_VERSION} ${GIT_REPO}
-	echo $SHELL
+	echo ${SHELL}
 	{ cd ${UPLINKC_NAME} && ${GOBUILD} -o ../${LIBRARY_NAME_WIN} -buildmode=c-shared && mv ${LIBRARY_UPLINK} ../; }
 	rmdir /s /q ${UPLINKC_NAME}
 else
