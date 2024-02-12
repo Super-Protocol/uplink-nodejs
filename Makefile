@@ -26,8 +26,7 @@ build:
 ifdef OS
 	git clone -b ${UPLINKC_VERSION} ${GIT_REPO}
 	ls
-	cd ${UPLINKC_NAME}
-	ls
+	cd ${UPLINKC_NAME} && ls
 	(cd ${UPLINKC_NAME}) && (${GOBUILD} -o ../${LIBRARY_NAME_WIN} -buildmode=c-shared) && (move ${LIBRARY_UPLINK} ../)
 	rmdir /s /q ${UPLINKC_NAME}
 else
