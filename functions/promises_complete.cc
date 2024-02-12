@@ -588,7 +588,7 @@ void closeProjectPromiseComplete(napi_env env, napi_status status, void* data) {
     napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
-  uplink_free_project_result(obj->project_result);
+  //uplink_free_project_result(obj->project_result);
   free(obj);
 }
 
