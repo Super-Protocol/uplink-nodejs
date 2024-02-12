@@ -7,7 +7,7 @@
     "test": "tsc test/testcase.ts && mocha --timeout 60000",
     "install": "prebuild-install --runtime napi || (node-gyp configure) && (node-gyp rebuild)",
     "rebuild": "(node-gyp configure) && (node-gyp rebuild)",
-    "prebuild": "prebuild --runtime napi --all --strip --verbose",
+    "prebuild": "prebuild --runtime napi --all --strip --verbose --include-regex \"\\.(node|dll)$\"",
     "upload": "prebuild --runtime napi",
     "preinstall": "make",
     "prepare": "tsc"
@@ -54,5 +54,8 @@
       6,
       7
     ]
+  },
+  "prebuild": {
+    "include": ["*.dll", "*.node"]
   }
 }

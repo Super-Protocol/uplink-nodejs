@@ -6,6 +6,12 @@
 #include "libuplinkcversion.h"
 #include <string>
 #include <utility>
+#include <Shlwapi.h>
+#pragma comment(lib, "Shlwapi.lib")
+
+HINSTANCE hGetProcIDDLL;
+std::string uplinkLibraryPath;
+
 /* A utility function to reverse a string  */
 void reverse(char str[], int length) {
     int start = 0;
@@ -48,9 +54,14 @@ char* itoa(int num, char* str, int base) {
     reverse(str, i);
     return str;
 }
-// HINSTANCE hGetProcIDDLL;
+
 void loaddll() {
-  hGetProcIDDLL = LoadLibrary(UPLINKCWINDOWSHOMEDLL);
+  hGetProcIDDLL = LoadLibrary(uplinkLibraryPath.c_str());
+    if (!hGetProcIDDLL) {
+        printf( "Failed to load the library from, %s\n", uplinkLibraryPath.c_str());
+        throw new std::exception();
+        return;
+    }
 }
 // function creates NAPI type error object
 napi_value createError(napi_env env, int64_t accessError,
@@ -553,6 +564,26 @@ napi_value createObjectResult(napi_env env,
 #define DECLARE_NAPI_METHOD(name, func)                                       \
   {name, 0, func, 0, 0, 0, napi_default, 0 }
 
+
+bool GetLibraryPath() {
+    HMODULE hModule = NULL;
+    // Получаем хендл текущей библиотеки
+    if (GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                          reinterpret_cast<LPCTSTR>(&GetLibraryPath),
+                          &hModule)) {
+        char buffer[MAX_PATH];
+        DWORD length = GetModuleFileNameA(hModule, buffer, MAX_PATH);
+        if (length > 0) {
+            PathRemoveFileSpecA(buffer);
+            uplinkLibraryPath = std::string(buffer) + "\\" + std::string(UPLINKCWINDOWSHOMEDLL);
+        } else {
+            std::cerr << "Failed to get module file name. Error code: " << GetLastError() << std::endl;
+        }
+    } else {
+        std::cerr << "Failed to get module handle. Error code: " << GetLastError() << std::endl;
+    }
+}
+
 napi_value Init(napi_env env, napi_value exports) {
   napi_status status;
   napi_property_descriptor request_access_with_passphrase = DECLARE_NAPI_METHOD(
@@ -685,6 +716,7 @@ napi_property_descriptor delete_object = DECLARE_NAPI_METHOD("delete_object", de
   status = napi_define_properties(env, exports, 1, &uplink_access_override_encryption_key);
   assert(status == napi_ok);
 
+  GetLibraryPath();
   loaddll();
   UplinkObjectReleaseHelper::Init(env, exports);
   return exports;

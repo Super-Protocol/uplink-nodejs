@@ -2,8 +2,7 @@
 #include "promises_execute_win.h"
 #include "release_objects_helpers.h"
 #include <string>
-
-HINSTANCE hGetProcIDDLL = LoadLibrary(UPLINKCWINDOWSDLL);
+#include "../libUplink.h"
 
 void openProjectPromiseExecute(napi_env env, void* data) {
     openProjectPromiseObj* obj =

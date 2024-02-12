@@ -20,12 +20,16 @@
           "target_name": "uplink",
           "include_dirs": ["./functions_win", "./common"],
           "sources":["libUplink_win.cc" , "./functions_win/promises_execute_win.cc", "./functions_win/promises_complete_win.cc", "./common/project_operations.cc", "./common/download_operations.cc", "./common/upload_operations.cc", "./common/access_operations.cc", "./common/bucket_operations.cc", "./common/object_operations.cc", "./common/release_objects_helpers.cc"],
-          "copies":[{
-            "destination":"<(module_root_dir)/build/Release",
-            "files":["<(module_root_dir)/libuplinkcversion.h","<(module_root_dir)/libuplinkcv1.7.0-sp.dll","<(module_root_dir)/libuplinkcv1.7.0-sp.h","<(module_root_dir)/uplink_definitions.h","<(module_root_dir)/uplink_combat.h"]
-          }],
-          "ldflags":["-Wl,-rpath","build/Release"],
         },
+        {
+            'target_name': 'copy_dll',
+            'type': 'none',
+            'dependencies': ['uplink'],
+            "copies":[{
+            "destination":"<(module_root_dir)/build/Release",
+            "files":["<(module_root_dir)/libuplinkcv1.7.0-sp.dll"]
+          }],
+        }
       ]
     }],
     ['OS=="mac"',{

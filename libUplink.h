@@ -19,12 +19,27 @@ char* itoa(int num, char* str, int base);
 
 #ifdef _WIN32
   //
+  extern std::string uplinkLibraryPath;
   extern HINSTANCE hGetProcIDDLL;
   void loaddll();
 
   napi_value AccessFunction(napi_env env, napi_value AccessNAPIObj);
 
   napi_value ProjectFunction(napi_env env, napi_value projectNAPIObj);
+  /*class LoadUplinkLibrary {
+  public:
+     static LoadUplinkLibrary& getInstance() {
+        static LoadUplinkLibrary instance;
+        return instance;
+    }
+  private:
+    HINSTANCE libraryHandle;
+    LoadUplinkLibrary();
+    template <typename FuncType>
+    FuncType* getFunction(const char* functionName) {
+        return reinterpret_cast<FuncType*>(GetProcAddress(libraryHandle, functionName));
+    }
+  };*/
 #endif
 
 //function creates NAPI type error object

@@ -5,7 +5,7 @@ napi_ref UplinkObjectReleaseHelper::constructor;
 #ifdef _WIN32
   #include <windows.h>
   #include "../libuplinkcversion.h"
-  HINSTANCE hGetProcIDDLL2 = LoadLibrary(UPLINKCWINDOWSDLL);
+  #include "../libUplink.h"
 #endif
 
 UplinkObjectReleaseHelper::UplinkObjectReleaseHelper()
@@ -148,7 +148,7 @@ UplinkError* DownloadObjectReleaseHelper::Close()
   UplinkError* err = nullptr;
   if (resultExist) {
 #ifdef _WIN32
-    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL2), "uplink_close_download");
+    FARPROC fn = GetProcAddress(hGetProcIDDLL, "uplink_close_download");
     if (fn) {
         typedef UplinkError* (__stdcall* pICError)(UplinkDownload*);
         pICError close_download;
