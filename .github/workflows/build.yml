@@ -35,6 +35,9 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         run: |
           choco install make
+      - name: Run make
+        run: make
+        shell: pwsh
       - name: Install dependencies
         run: npm ci
         shell: pwsh
