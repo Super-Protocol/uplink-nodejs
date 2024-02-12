@@ -11,8 +11,9 @@ jobs:
     strategy:
       matrix:
         os:
-          # - ubuntu-20.04
-          # - macos-latest,
+          - ubuntu-20.04
+          - macos-12 # Intel Mac
+          - macos-14 # M1 Mac
           - windows-latest
     steps:
       - name: Checkout repository
@@ -36,9 +37,6 @@ jobs:
         shell: pwsh
       - name: Build binaries
         run: npm run prebuild
-      - name: Build binaries for M1
-        if: startsWith(matrix.os, 'macos')
-        run: npm run prebuild -- -a arm64
       - name: "Save build results for release job"
         uses: actions/upload-artifact@v3
         with:
