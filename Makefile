@@ -22,11 +22,21 @@ RED_COLOR=\033[31m
 GREEN_COLOR=\033[32m
 RESET_COLOR=\033[0m
 #
+ifdef OS
+	ifeq ($(SHELL),sh.exe)
+		BUILD_WIN_CMD := (cd ${UPLINKC_NAME}) && (${GOBUILD} -o ../${LIBRARY_NAME_WIN} -buildmode=c-shared) && (move ${LIBRARY_UPLINK} ../)
+		RMDIR_CMD := rmdir /s /q ${UPLINKC_NAME}
+	else
+		BUILD_WIN_CMD := { cd ${UPLINKC_NAME} && ${GOBUILD} -o ../${LIBRARY_NAME_WIN} -buildmode=c-shared && mv ${LIBRARY_UPLINK} ../; }
+		RMDIR_CMD := rm -rf ${UPLINKC_NAME}
+	endif
+endif
+
 build:
 ifdef OS
 	git clone -b ${UPLINKC_VERSION} ${GIT_REPO}
-	{ cd ${UPLINKC_NAME} && ${GOBUILD} -o ../${LIBRARY_NAME_WIN} -buildmode=c-shared && mv ${LIBRARY_UPLINK} ../; }
-	rm -rf ${UPLINKC_NAME}
+	${BUILD_WIN_CMD}
+	${RMDIR_CMD}
 else
 	echo "$(shell uname)";\
   mkdir -p ./$(JSFOLDER);\
