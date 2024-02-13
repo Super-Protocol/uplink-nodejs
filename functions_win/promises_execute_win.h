@@ -1,4 +1,4 @@
-#include "definitions_win.h"
+#include "definitions.h"
 
 void loaddll();
 

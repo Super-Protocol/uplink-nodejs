@@ -2,17 +2,47 @@
 #define LIBUPLINK_H
 
 
-#include "functions/definitions.h"
-#include "functions/promises_complete.h"
-#include "functions/promises_execute.h"
-#include "functions/project_operations.h"
-#include "functions/access_operations.h"
+#include "./common/definitions.h"
+#ifdef _WIN32
+  #include "./functions_win/promises_complete_win.h"
+  #include "./functions_win/promises_execute_win.h"
+#else
+  #include "functions/promises_complete.h"
+  #include "functions/promises_execute.h"
+#endif
+#include "./common/project_operations.h"
+#include "./common/access_operations.h"
 
 void reverse(char str[], int length);
 
 char* itoa(int num, char* str, int base);
 
-// function creates NAPI type error object
+#ifdef _WIN32
+  //
+  extern std::string uplinkLibraryPath;
+  extern HINSTANCE hGetProcIDDLL;
+  void loaddll();
+
+  napi_value AccessFunction(napi_env env, napi_value AccessNAPIObj);
+
+  napi_value ProjectFunction(napi_env env, napi_value projectNAPIObj);
+  /*class LoadUplinkLibrary {
+  public:
+     static LoadUplinkLibrary& getInstance() {
+        static LoadUplinkLibrary instance;
+        return instance;
+    }
+  private:
+    HINSTANCE libraryHandle;
+    LoadUplinkLibrary();
+    template <typename FuncType>
+    FuncType* getFunction(const char* functionName) {
+        return reinterpret_cast<FuncType*>(GetProcAddress(libraryHandle, functionName));
+    }
+  };*/
+#endif
+
+//function creates NAPI type error object
 napi_value createError(napi_env env, int64_t accessError, char* errorMessagePtr);
 //
 int64_t getHandleValue(napi_env env, napi_value handleobj);

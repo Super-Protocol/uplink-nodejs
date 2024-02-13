@@ -593,9 +593,9 @@ void closeProjectPromiseComplete(napi_env env, napi_status status, void* data) {
 }
 
 /*!
- \fn void revokeAccessPromiseComplete(napi_env env, napi_status status, void* data) 
+ \fn void revokeAccessPromiseComplete(napi_env env, napi_status status, void* data)
  \brief  revokeAccessPromiseComplete creates the handle for revoke_access
-  
+
  */
 void revokeAccessPromiseComplete(napi_env env, napi_status status, void* data) {
   revokeAccessPromiseObj *obj = (revokeAccessPromiseObj*)data;

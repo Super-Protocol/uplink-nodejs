@@ -1,9 +1,9 @@
-#include "definitions_win.h"
-#include "../libUplink_win.h"
-#include "download_operations_win.h"
-#include "upload_operations_win.h"
-#include "bucket_operations_win.h"
-#include "object_operations_win.h"
+#include "definitions.h"
+#include "../libUplink.h"
+#include "download_operations.h"
+#include "upload_operations.h"
+#include "bucket_operations.h"
+#include "object_operations.h"
 
 void loaddll();
 
