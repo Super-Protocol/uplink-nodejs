@@ -3,6 +3,7 @@
   "version": "1.2.18",
   "description": "Storj-NodeJS bindings package",
   "main": "dist/uplink.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "tsc test/testcase.ts && mocha --timeout 60000",
     "install": "prebuild-install --runtime napi || npm run rebuild",
