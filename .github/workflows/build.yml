@@ -1,7 +1,10 @@
-name: Create binary files for every supported platform
+name: Build
+
 on:
   workflow_dispatch:
-  pull_request:
+  push:
+    tags:
+        - v*.*.*
   release:
     types: [published]
 
