@@ -5,7 +5,7 @@
   "main": "dist/uplink.js",
   "scripts": {
     "test": "tsc test/testcase.ts && mocha --timeout 60000",
-    "install": "echo INSTALL && prebuild-install --runtime napi || make -B && echo TEST && (node-gyp configure) && (node-gyp rebuild)",
+    "install": "(echo INSTALL && prebuild-install --runtime napi) || (make -B && echo TEST && (node-gyp configure) && (node-gyp rebuild))",
     "rebuild": "echo REBUILD && make && (node-gyp configure) && (node-gyp rebuild)",
     "prebuild": "prebuild --runtime napi --all --strip --verbose --include-regex \"\\.(node|dll)$\"",
     "upload": "prebuild --runtime napi",
