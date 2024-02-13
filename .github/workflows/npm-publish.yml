@@ -20,6 +20,10 @@ jobs:
       - run: npm pkg set scripts.install="echo no-install"
       - run: npm ci
       - run: git checkout package.json
+      - name: Delete needless scripts from package.json
+        run: |
+          scripts=(test preprebuild prebuild upload bump patch:beta patch prepare)
+          printf "%s\n" "${scripts[@]/#/scripts.}" | xargs npm pkg delete
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
