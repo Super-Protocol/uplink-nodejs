@@ -47,7 +47,6 @@ else
   $(GOBUILD) -o ../$(LIBRARY_NAME_POSIX) -buildmode=c-archive;\
   cp $(LIBRARY_UPLINK) ../;\
   cd ../;\
-  cp error.js ./$(JSFOLDER);\
   if test -d ./$(UPLINKC_NAME); then rm -rf ./$(UPLINKC_NAME); fi;\
   echo ' $(GREEN_COLOR) \n Successfully build $(RESET_COLOR)';
 endif
