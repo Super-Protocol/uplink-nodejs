@@ -4,9 +4,10 @@
 name: Node.js Package
 
 on:
-  push:
-    tags:
-        - v*.*.*
+  workflow_dispatch:
+  release:
+    types: [published]
+
 jobs:
   publish-npm:
     runs-on: ubuntu-latest
