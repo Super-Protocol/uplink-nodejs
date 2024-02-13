@@ -7,6 +7,7 @@
     "test": "tsc test/testcase.ts && mocha --timeout 60000",
     "install": "prebuild-install --runtime napi || make && (node-gyp configure) && (node-gyp rebuild)",
     "rebuild": "make && (node-gyp configure) && (node-gyp rebuild)",
+    "preprebuild": "make",
     "prebuild": "prebuild --runtime napi --all --strip --verbose --include-regex \"\\.(node|dll)$\"",
     "upload": "prebuild --runtime napi",
     "bump": "npm version prerelease --preid=beta",
