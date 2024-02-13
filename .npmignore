@@ -4,6 +4,7 @@
 /build
 /uplink-c
 /docs
+/src
 /test
 /README.assets
 Dockerfile
