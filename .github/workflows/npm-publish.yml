@@ -16,7 +16,6 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm pkg set scripts.preinstall="echo no-preinstall"
       - run: npm pkg set scripts.install="echo no-install"
       - run: npm ci
       - run: git checkout package.json
