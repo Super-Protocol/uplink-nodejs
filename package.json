@@ -1,6 +1,6 @@
 {
   "name": "@super-protocol/uplink-nodejs",
-  "version": "1.2.18-beta.7",
+  "version": "1.2.18",
   "description": "Storj-NodeJS bindings package",
   "main": "dist/uplink.js",
   "scripts": {
@@ -12,6 +12,7 @@
     "upload": "prebuild --runtime napi",
     "bump": "npm version prerelease --preid=beta",
     "patch:beta": "npm version prepatch --preid=beta",
+    "patch": "npm version patch",
     "prepare": "tsc"
   },
   "repository": {
