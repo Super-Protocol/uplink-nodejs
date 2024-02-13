@@ -12,6 +12,17 @@
 HINSTANCE hGetProcIDDLL;
 std::string uplinkLibraryPath;
 
+LoadUplinkLibrary::LoadUplinkLibrary()
+{
+    hGetProcIDDLL = LoadLibrary(uplinkLibraryPath.c_str());
+    if (!hGetProcIDDLL) {
+        printf( "Failed to load the library from, %s\n", uplinkLibraryPath.c_str());
+        return;
+    }
+    initialized = true
+}
+
+
 /* A utility function to reverse a string  */
 void reverse(char str[], int length) {
     int start = 0;
@@ -567,7 +578,6 @@ napi_value createObjectResult(napi_env env,
 
 void GetLibraryPath() {
     HMODULE hModule = NULL;
-    // Получаем хендл текущей библиотеки
     if (GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
                           reinterpret_cast<LPCTSTR>(&GetLibraryPath),
                           &hModule)) {
