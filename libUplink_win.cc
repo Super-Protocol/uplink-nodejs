@@ -12,17 +12,6 @@
 HINSTANCE hGetProcIDDLL;
 std::string uplinkLibraryPath;
 
-LoadUplinkLibrary::LoadUplinkLibrary()
-{
-    hGetProcIDDLL = LoadLibrary(uplinkLibraryPath.c_str());
-    if (!hGetProcIDDLL) {
-        printf( "Failed to load the library from, %s\n", uplinkLibraryPath.c_str());
-        return;
-    }
-    initialized = true
-}
-
-
 /* A utility function to reverse a string  */
 void reverse(char str[], int length) {
     int start = 0;
