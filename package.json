@@ -1,6 +1,6 @@
 {
   "name": "@super-protocol/uplink-nodejs",
-  "version": "1.2.19",
+  "version": "1.2.20",
   "description": "Storj-NodeJS bindings package",
   "main": "dist/uplink.js",
   "types": "dist/index.d.ts",
