@@ -117,6 +117,11 @@ export class AccessResultStruct {
 
     }
 
+    /** 
+     * Create s3 credentials by accessGrant
+     * Input: access token, host (default https://auth.storjshare.io), public flag (default false)
+     * Output: {accessKeyId, secretKey, endpoint}
+     */
     async registerS3Credentials(access: string, host = 'https://auth.storjshare.io', isPublic = false): Promise<S3Credentials> {
         const postData = JSON.stringify({
             access_grant: access,
