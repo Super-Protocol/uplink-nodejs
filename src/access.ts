@@ -2,8 +2,10 @@
 import bindings = require("bindings");
 const uplink = bindings("uplink");
 
-import {ProjectResultStruct} from "./project.js";
+import https from 'https';
+import { ProjectResultStruct } from "./project.js";
 import { Config } from "./uplink.js";
+import { S3Credentials } from "./types.js";
 const errorhandle = require("./error.js");
 
 
@@ -113,6 +115,70 @@ export class AccessResultStruct {
 
         return stringResult;
 
+    }
+
+    /** 
+     * Create s3 credentials by accessGrant
+     * Input: access token, host (default https://auth.storjshare.io), public flag (default false)
+     * Output: {accessKeyId, secretKey, endpoint}
+     */
+    async registerS3Credentials(access: string, host = 'https://auth.storjshare.io', isPublic = false): Promise<S3Credentials> {
+        const postData = JSON.stringify({
+            access_grant: access,
+            public: isPublic
+        });
+
+        const options = {
+            hostname: new URL(host).hostname,
+            path: '/v1/access',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': postData.length
+            },
+        };
+
+        return new Promise((resolve, reject) => {
+            const req = https.request(options, (res) => {
+                let data = '';
+    
+                res.on('data', (chunk) => {
+                    data += chunk;
+                });
+    
+                res.on('end', () => {
+                    if (res.statusCode !== 200) {
+                        reject(new Error(`Request failed with status code ${res.statusCode}: ${data}`));
+                        return;
+                    }
+    
+                    try {
+                        const responseBody = JSON.parse(data);
+                        const result = {
+                            accessKeyId: responseBody.access_key_id,
+                            secretKey: responseBody.secret_key,
+                            endpoint: responseBody.endpoint,
+                        }
+    
+                        if (!result.accessKeyId || !result.secretKey) {
+                            reject(new Error('Response is missing access_key_id or secret_key'));
+                            return;
+                        }
+    
+                        resolve(result);
+                    } catch (err) {
+                        reject(new Error(`Unexpected response from auth service: ${data}`));
+                    }
+                });
+            });
+    
+            req.on('error', (err) => {
+                reject(err);
+            });
+    
+            req.write(postData);
+            req.end();
+        });
     }
 
     /*

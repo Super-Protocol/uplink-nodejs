@@ -300,6 +300,7 @@ function serializeAccess (sharedAccess) {
                     await sharedAccess.serialize(sharedAccess.access).then(async (stringResult) => {
 
                         parsedAccess(stringResult);
+                        s3Access(sharedAccess, stringResult);
                         resolve(true);
 
                     }).
@@ -317,6 +318,18 @@ function serializeAccess (sharedAccess) {
         })
     );
 
+}
+
+function s3Access(access, stringResult) {
+    describe("s3 access", () => {
+        it('should return s3 credentials', async () => {
+            const s3Creds = await access.registerS3Credentials(stringResult);
+
+            chai.expect(s3Creds.accessKeyId).to.be.a('string');
+            chai.expect(s3Creds.secretKey).to.be.a('string');
+            chai.expect(s3Creds.endpoint).to.be.a('string');
+        })
+    })
 }
 
 // Access share testcases
