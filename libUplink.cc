@@ -834,3 +834,4 @@ napi_property_descriptor delete_object = DECLARE_NAPI_METHOD("delete_object", de
   return exports;
 }
 NAPI_MODULE(NODE_GYP_MODULE_NAME, Init)
+NAN_MODULE_WORKER_ENABLED(NODE_GYP_MODULE_NAME, Init)
